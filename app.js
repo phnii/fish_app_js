@@ -6,9 +6,13 @@ const logger = require('morgan');
 const mongoose = require("mongoose");
 const expressSession = require("express-session");
 const layouts = require("express-ejs-layouts");
+const passport = require("passport");
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+
+const User = require("./models/user");
+
 const app = express();
 
 // DB接続設定
@@ -43,6 +47,19 @@ app.use(
   })
 );
 app.use(express.static(path.join(__dirname, 'public')));
+
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use((req, res, next) => {
+  res.locals.loggedIn = req.isAuthenticated();
+  res.locals.currentUser = req.user;
+  next();
+});
 
 
 app.use('/', indexRouter);

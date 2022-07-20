@@ -21,12 +21,15 @@
         <div class="navbar-nav">
           <a href="#" class="nav-item nav-link text-light">トップ</a>
           <a href="#" class="nav-item nav-link text-light">投稿検索</a>
+          <% if (!loggedIn) { %>
           <a href="#" class="nav-item nav-link text-light">ログイン</a>
           <a href="#" class="nav-item nav-link text-light">新規登録</a>
+          <% } else { %>
           <a href="#" class="nav-item nav-link text-light">新規投稿</a>
           <a href="#" class="nav-item nav-link text-light">投稿履歴</a>
           <a href="#" class="nav-item nav-link text-light">フォローリスト</a>
           <a href="#" class="nav-item nav-link text-light btn">ログアウト</a>
+          <% } %>
         </div>
       </div>
     </nav>
