@@ -1,23 +1,49 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const mongoose = require("mongoose");
+const expressSession = require("express-session");
+const layouts = require("express-ejs-layouts");
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const app = express();
 
-var app = express();
+// DB接続設定
+mongoose.connect(
+  "mongodb://localhost:27017/fish_app_js_db",
+  {useNewUrlParser: true}
+);
+mongoose.set("useCreateIndex", true);
+
+const db = mongoose.connection;
+db.once("open", () => {
+  console.log("Successfully connected to MongoDB using Mongoose!");
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.use(layouts);
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser("testpass"));
+app.use(
+  expressSession({
+    secret: "testpass",
+    cookie: {
+      maxAge: 4000000
+    },
+    resave: false,
+    saveUninitialized: false
+  })
+);
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

@@ -1,0 +1,19 @@
+<h3 class='text-center mt-3'>ログイン</h3>
+
+<div class="container bg-white mt-5">
+  <div class="d-grid col-6 mx-auto pt-5 pb-5">
+    <form action="/users/create" method="POST">
+      <div class="field">
+        <label for="email">メールアドレス</label>
+        <input type="email" name="email" class="form-control" required>
+      </div>
+      <div class="field">
+        <label for="password">パスワード</label>
+        <input type="password" name="password" class="form-control">
+      </div>
+      <div class="actions">
+        <input type="submit" value="送信" class="btn btn-block btn-success mt-2">
+      </div>
+    </form>
+  </div>
+</div>
