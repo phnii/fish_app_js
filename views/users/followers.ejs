@@ -1,0 +1,71 @@
+<div class="container bg-white mt-5 ">
+  <div class="col-6 mx-auto pt-5 pb-5 text-center">
+    <!-- <h3><#%= link_to @user.name, user_path(@user), class: 'text-body' %>のフォローリスト</h3> -->
+    <h3><a href="#" class="text-body"><%= user.name %>のフォローリスト</a></h3>
+  
+      <% if (loggedIn) { %>
+        <% if ((currentUser._id.toString() !== user._id.toString()) && !currentUser.isFollowing(user)) { %>
+          <form action="/users/follow/<%= user._id %>" method="post">
+            <input type="submit" id="follow_create_btn" class="btn btn-sm btn-primary" value="フォローする">
+          </form>
+        <% } else if (currentUser._id.toString() !== user._id.toString()) { %>
+          <form action="/users/unfollow/<%= user._id %>" method="post">
+            <input class='btn btn-sm btn-danger' type="submit" value='フォローを外す' >
+          </form>
+        <% } %>
+      <% } %>
+
+      <!-- <div class="message-button mt-3">
+        <#% if (loggedIn && currentUser._id.toString !== user._id.toString) { %>
+          <#% if (mutural || room_exist) { %>
+          <#% if (current_user.following?(@user) and @user.following?(current_user) or @room_exist) %>
+            <#% <form action="{% url 'room_create' pk %}" method="post">
+              <input class='btn btn-sm btn-info' type="submit" value="メッセージ">
+            </form> %>
+            <#%= form_with url: rooms_path, model: @room, local: true, method: :post do |f| %>
+              <#%= f.hidden_field :user_ids, name: "room[user_ids][]", value: @user.id %>
+              <#%= f.hidden_field :user_ids, name: "room[user_ids][]", value: current_user.id %>
+              <#%= f.submit 'メッセージ', class: 'btn btn-sm btn-info', id: 'message_btn' %>
+            <#% end %>
+          <#% end %>
+        <#% {% endif %}
+        <#% end %>
+      </div> -->
+  </div>
+
+  <!-- <div class="d-flex">
+    <div class='col-6'>
+      <h5>以下のユーザーをフォローしています(<#%= user.followings.count %>)</h5> 
+      <#% user.followings.each do |following_target| %>
+        <div class="follower border p-2 m-1">
+          <div>
+          <#%= link_to following_target.name, follow_list_user_path(following_target), class: 'text-body' %>
+          (投稿数 :  <#%= following_target.trips.count %>)
+          <#%= link_to '投稿履歴', user_path(following_target), class: 'text-secondary' %>
+          <#%= link_to 'フォローリスト ', follow_list_user_path(following_target), class: 'text-secondary' %>
+          </div>
+          <div>
+            <#%= simple_format(following_target.introduce) %>
+          </div>
+        </div>
+      <#% end %>
+    </div>
+    <div class="col-6">
+    <h5>以下のユーザーによってフォローされています(<#%= @user.followers.count %>)</h5>
+    <#% @user.followers.each do |follower| %>
+      <div class="followed border p-2 m-1">
+        <div>
+          <#%= link_to follower.name, follow_list_user_path(follower), class: 'text-body' %>
+          (投稿数 :  <#%= follower.trips.count %>)
+          <#%= link_to '投稿履歴', user_path(follower), class: 'text-secondary' %>
+          <#%= link_to 'フォローリスト ', follow_list_user_path(follower), class: 'text-secondary' %>
+        </div>
+        <div>
+          <#%= simple_format(follower.introduce) %> 
+        </div>
+      </div>
+    <#% end %>
+    </div>
+  </div>  -->
+</div>
+</div>

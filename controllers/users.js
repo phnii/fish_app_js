@@ -52,10 +52,65 @@ module.exports = {
       })
       .catch(error => {
         console.log(`Error occurred in users#show : ${error.message}`);
+        res.locals.user = user;
         next(error);
       })
   },
   showView: (req, res) => {
     res.render("users/show");
+  },
+  follow: (req, res, next) => {
+    let follower = req.user;
+    User.findById(req.params.id)
+      .then(followed => {
+        follower.followings.push(followed._id);
+        follower.save();
+        followed.followers.push(follower._id);
+        followed.save();
+        res.locals.redirect = `/users/${followed._id}/followers`;
+        next();
+      })
+      .catch(error => {
+        console.log(`Error occurred in users#follow: ${error.message}`);
+        next(error);
+      });
+  },
+  unfollow: (req, res, next) => {
+    res.locals.redirect = `/users/${req.params.id}`;
+    User.findById(req.params.id)
+      .then(followed => {
+        let newFollowings = req.user.followings.filter(i => {
+          return i.toString() !== followed._id.toString();
+        });
+        req.user.followings = newFollowings;
+        req.user.save();
+        let newFollowers = followed.followers.filter(i => {
+          return i.toString() !== req.user._id.toString();
+        })
+        followed.followers = newFollowers;
+        followed.save();
+        res.locals.redirect = `/users/${followed._id}/followers`;
+        next();
+      })
+      .catch(error => {
+        console.log(`Error occurred in users#unfollow: ${error.message}`);
+        next(error);
+      })
+  },
+  followers: (req, res, next) => {
+ 
+    User.findById(req.params.id)
+      .then(user => {
+        res.locals.user = user;
+        next();
+      })
+      .catch(error => {
+        console.log(`Error occurred in users#show : ${error.message}`);
+        res.locals.user = user;
+        next(error);
+      })
+  },
+  followersView: (req, res) => {
+    res.render("users/followers");
   }
 }
