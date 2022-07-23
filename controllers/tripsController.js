@@ -15,13 +15,13 @@ const getFishParams = (req, i) => {
   if (req.files) {
     if (req.files[`fishImage_${i}`]) {
       return {
-        name: req.body.fishName[i],
+        name: (typeof(req.body.fishName) === "string") ? req.body.fishName : req.body.fishName[i],
         image: req.files[`fishImage_${i}`].md5,
       }
     }
   }
   return {
-    name: req.body.fishName[i],
+    name: (typeof(req.body.fishName) === "string") ? req.body.fishName : req.body.fishName[i],
     image: null
   };
 };
@@ -57,11 +57,11 @@ module.exports = {
       fishes: []
     };
     let newTrip = new Trip(newTripParams);
-    console.log(req.body.fishName);
     // 釣果の投稿があった場合はfishデータの保存も行う
     if (req.body.fishName) {
       // req.body.fishNameは一つのフォーム送信された場合文字列で、複数では配列になる
-      let submittedFishNum = (typeof(req.body.fishName) === "string") ? 1 : req.body.fishName.length;
+      let submittedFishName = (typeof(req.body.fishName) === "string") ? [req.body.fishName] : req.body.fishName;
+      let submittedFishNum = submittedFishName.length;
       for (let i = 0; i < submittedFishNum; i++) {
         let newFish = new Fish(Object.assign(getFishParams(req, i), {trip: newTrip._id}));
         console.log(newFish);
@@ -103,5 +103,71 @@ module.exports = {
   },
   showView: (req, res) => {
     res.render("trips/show");
+  },
+  edit: (req, res, next) => {
+    Trip.findById(req.params.id)
+      .populate({path: "user"})
+      .populate({path: "fishes"})
+      .then(trip => {
+        res.locals.trip = trip;
+        res.render("trips/edit");
+      })
+      .catch(error => {
+        console.log(error);
+        next(error);
+      })
+  },
+  update: (req, res, next) => {
+    console.log(req.body);
+    let tripParams = {
+      title: req.body.title,
+      prefecture: req.body.prefecture,
+      content: req.body.content
+    };
+    Trip.findByIdAndUpdate(req.params.id, {
+      $set: tripParams
+    })
+    .then(trip => {
+      console.log(req.body.deleteCheckBox);
+      if (req.body.deleteCheckBox) {
+        // 釣果の削除があれば削除をする
+        // deleteCheckBoxのチェックボックスが一つしかチェックされなかった時でも配列になるように変換する
+        let deleteCheckBoxArray = (typeof(req.body.deleteCheckBox) === "string") ? [req.body.deleteCheckBox] : req.body.deleteCheckBox;
+        deleteCheckBoxArray.forEach(deletedFish => {
+          Fish.findByIdAndRemove(deletedFish)
+          let updatedFishes = trip.fishes.filter(fish => {
+            return deletedFish.toString() !== fish._id.toString();
+          })
+          trip.fishes = updatedFishes;
+        });
+        trip.save();
+      }
+      res.locals.trip = trip;
+      res.locals.redirect = `/trips/${trip._id}`;
+      if (req.body.fishName) {
+        // req.body.fishNameは一つのフォーム送信された場合文字列で、複数では配列になる
+        let submittedFishName = (typeof(req.body.fishName) === "string") ? [req.body.fishName] : req.body.fishName;
+        let submittedFishNum = submittedFishName.length;
+        for (let i = 0; i < submittedFishNum; i++) {
+          let newFish = new Fish(Object.assign(getFishParams(req, i), {trip: trip._id}));
+          console.log(newFish);
+          if (req.files) {
+            if (req.files[`fishImage_${i}`]) {
+              fs.writeFile("./public/uploads/" + req.files[`fishImage_${i}`].md5, 
+                req.files[`fishImage_${i}`].data, (err) => console.log(err));
+              newFish.toObject().image = req.files[`fishImage_${i}`].md5;
+            }
+          }
+          newFish.save();
+          trip.fishes.push(newFish._id);
+          trip.save();
+        }
+      }
+      next();
+    })
+    .catch(error => {
+      console.log(`Error occurred in trips#update: ${error}`);
+      next(error);
+    })
   }
 }

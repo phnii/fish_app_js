@@ -1,0 +1,43 @@
+<div class="container bg-white mb-3 pb-3">
+  <h3 class="text-center py-3 my-5">編集</h1>
+  <div class="form-wrapper d-grid col-6 mx-auto gap-2 ">
+    <form id="form-container" action="/trips/update/<%=trip._id%>" method="post" enctype="multipart/form-data">
+      <!-- render partial: 'error_messages', locals: { model: @trip} -->
+      <div class="tripform">
+        <label for="title">タイトル</label>
+        <input type="text" name="title" class="form-control" value="<%=trip.title%>">
+        <label for="prefecture">都道府県</label>
+        <input type="text" name="prefecture" class="form-control" value="<%=trip.prefecture%>">
+        <label for="content">内容</label>
+        <textarea name="content" class="form-control" cols="30" rows="10"><%=trip.content%></textarea>
+      </div>
+  
+      <div class="boundery border-bottom border-top text-center mb-2">釣果</div>
+          <!-- unless t.object -->
+          <div class="nested-fields border p-3 mb-3 border-primary">
+            <div id="form_area">
+              <input type="text" id="inputform_0" placeholder="フォーム-0" name="fishName" class="form-control">
+              <input type="file" id="inputform_0" name="fishImage_0">
+              <button id="0" onclick="deleteBtn(this)">削除</button>
+            </div>
+            <input type="button" value="フォーム追加" onclick="addForm()" class="btn btn-primary">
+            <script type="text/javascript" src="/javascripts/form.js"></script>
+          </div>
+           <!-- end  -->
+        <div class="past-results">
+          <% trip.fishes.forEach(fish => { %>
+            <div class="past-result">
+              <%=fish.name %>
+              <% if (fish.image) { %>
+                <img src="/uploads/<%=fish.image%>" width="30%" height="30%" alt="">
+              <% } %>
+              <label for="">削除</label>
+              <input type="checkbox" name="deleteCheckBox" value="<%= fish._id %>">
+            </div>
+          <% }) %>
+        </div>
+      <input type="submit" value="送信" class="btn btn-block btn-primary mt-s mb-3">
+    </form>
+
+  </div>
+</div>
