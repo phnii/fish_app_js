@@ -1,0 +1,18 @@
+<h1>trips#index</h1>
+<%= num %>
+<% trips.forEach(trip => { %>
+  <div class="trip">
+    <p>title:<%= trip.title %></p>
+    <p>content:<%= trip.content %></p>
+    <p>prefecture: <%= trip.prefecture %></p>
+    <% if (trip.fishes) { %>
+      <% trip.fishes.forEach(fish => { %>
+        <div class="fish">
+          fishName: <%= fish.name %>
+          <% if (fish.image) { %>
+          fishImage: <img src="/uploads/<%= fish.image %>" alt=""> <% } %>
+        </div>
+      <% })} %>
+  -----------------------------------------------
+  </div>
+<% }) %>

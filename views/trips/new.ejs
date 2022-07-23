@@ -1,0 +1,27 @@
+<div class="container bg-white mb-3 pb-3">
+  <h3 class="text-center py-3 my-5">新規投稿</h1>
+  <div class="form-wrapper d-grid col-6 mx-auto gap-2 ">
+    <form id="form-container" action="/trips/create" method="POST" enctype="multipart/form-data">
+      <!--  render partial: 'error_messages', locals: { model: @trip} -->
+      <div class="tripform">
+        <label for="title">タイトル</label>
+        <input type="text" name="title" placeholder="タイトル" class="form-control">
+        <label for="prefecture">都道府県</label>
+        <input type="text" name="prefecture" class="form-control">
+        <label for="content">内容</label>
+        <textarea name="content" cols="30" rows="10" class="form-control"></textarea>
+         <!-- s.collection_select(:prefecture_id, Prefecture.all, :id, :name, {}, class: 'form-control') -->
+      </div>
+        <div class="boundery border-bottom border-top text-center mb-2">釣果</div>
+        <div id="form_area">
+          <input type="text" id="inputform_0" placeholder="フォーム-0" name="fishName" class="form-control">
+          <input type="file" id="inputform_0" name="fishImage_0">
+          <button id="0" onclick="deleteBtn(this)">削除</button>
+        </div>
+        <input type="button" value="フォーム追加" onclick="addForm()" class="btn btn-primary">
+        <script type="text/javascript" src="/javascripts/form.js"></script>
+
+      <input type="submit" value="送信" class="btn btn-block btn-success mt-3 mb-3">
+    </form>
+  </div>
+</div>

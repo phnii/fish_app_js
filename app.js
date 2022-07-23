@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const fileUpload = require("express-fileupload");
 const mongoose = require("mongoose");
 const expressSession = require("express-session");
 const layouts = require("express-ejs-layouts");
@@ -10,6 +11,7 @@ const passport = require("passport");
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const tripsRouter = require("./routes/trips");
 
 const User = require("./models/user");
 
@@ -32,6 +34,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(layouts);
 
+app.use(fileUpload());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -64,6 +67,7 @@ app.use((req, res, next) => {
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use("/trips", tripsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
