@@ -88,4 +88,20 @@ module.exports = {
     if (redirectPath) res.redirect(redirectPath);
     else next();
   },
+  show: (req, res, next) => {
+    Trip.findById(req.params.id)
+      .populate({path: "user"})
+      .populate({path: "fishes"})
+      .then(trip => {
+        res.locals.trip = trip;
+        next();
+      })
+      .catch(error => {
+        console.log(error);
+        next(error);
+      })
+  },
+  showView: (req, res) => {
+    res.render("trips/show");
+  }
 }

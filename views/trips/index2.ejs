@@ -2,7 +2,7 @@
   <div class="row row-col-2 mt-5">
     <% trips.forEach(trip => { %>
       <div class="trip-container col-6 border p-3">
-        <div class="trip-title"><a href="#" class="text-body h5"></a></div>
+        <div class="trip-title"><a href="/trips/<%=trip._id%>" class="text-body h5"><%= trip.title %></a></div>
         <div class="d-flex mt-2">
           <div class="username">投稿日<%= trip.createdAt %> (<%= trip.prefecture %>)</div>
           <div class="username ml-auto">投稿者：<a href="#" class="ml-auto text-body"><%= trip.user.name %></a></div>
