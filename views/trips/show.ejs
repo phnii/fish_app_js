@@ -42,7 +42,10 @@
       <div class="text-right">
         <a href="#" class="btn btn-success btn-sm">編集</a>
         <!-- メソッド注意 -->
-        <a href="#" class="btn btn-danger btn-sm">削除</a>
+        <form action="/trips/<%=trip._id%>/delete?_method=DELETE" method="post">
+          <input type="submit" value="削除" class="btn btn-sm btn-danger">
+        </form>
+        <a href="/trips/<%=trip._id%>/delete?_method=DELETE" method="post" class="btn btn-danger btn-sm" >削除</a>
       </div>
     <% } %>
   </div>
@@ -66,7 +69,6 @@
               <form action="/trips/<%= trip._id%>/comment/<%= comment._id%>/delete?_method=DELETE" method="post" class="text-right">
                 <input type="submit" value="削除" class="btn btn-danger btn-sm mb-1">
               </form>
-              <a href="/trips/<%=trip._id%>/comment/<%=comment._id%>/delete?_method=DELETE">削除</a>
             <% } %>
             </div>
           </div>

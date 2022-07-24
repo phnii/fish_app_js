@@ -11,6 +11,19 @@ const getTripParams = (body) => {
   };
 };
 
+const authenticateUser = (req, res) => {
+  if (!req.user) {
+    res.redirect("/users/login");
+  }
+}
+
+const updateTripAttributes = (body, trip) => {
+  trip.title = body.title;
+  trip.content = body.content;
+  trip.prefecture = body.prefecture;
+  trip.save();
+}
+
 const getFishParams = (req, i) => {
   if (req.files) {
     if (req.files[`fishImage_${i}`]) {
@@ -46,9 +59,11 @@ module.exports = {
     res.render("trips/index2");
   },
   new: (req, res) => {
+    authenticateUser(req, res);
     res.render("trips/new");
   },
   create: (req, res, next) => {
+    authenticateUser(req, res);
     let newTripParams = {
       title: req.body.title,
       prefecture: req.body.prefecture,
@@ -107,12 +122,18 @@ module.exports = {
     res.render("trips/show");
   },
   edit: (req, res, next) => {
+    authenticateUser(req, res);
     Trip.findById(req.params.id)
       .populate({path: "user"})
       .populate({path: "fishes"})
       .then(trip => {
-        res.locals.trip = trip;
-        res.render("trips/edit");
+        if (req.user._id.toString() !== trip.user._id.toString()) {
+          res.status(403);
+          res.render("403");
+        } else {
+          res.locals.trip = trip;
+          res.render("trips/edit");
+        }
       })
       .catch(error => {
         console.log(error);
@@ -120,17 +141,14 @@ module.exports = {
       })
   },
   update: (req, res, next) => {
-    console.log(req.body);
-    let tripParams = {
-      title: req.body.title,
-      prefecture: req.body.prefecture,
-      content: req.body.content
-    };
-    Trip.findByIdAndUpdate(req.params.id, {
-      $set: tripParams
-    })
+    authenticateUser(req, res);
+    Trip.findById(req.params.id)
     .then(trip => {
-      console.log(req.body.deleteCheckBox);
+      if (trip.user._id.toString() !== req.user._id.toString()) {
+        res.status(403);
+        res.render("403");
+      } else {
+      updateTripAttributes(req.body, trip);
       if (req.body.deleteCheckBox) {
         // 釣果の削除があれば削除をする
         // deleteCheckBoxのチェックボックスが一つしかチェックされなかった時でも配列になるように変換する
@@ -164,12 +182,26 @@ module.exports = {
           trip.fishes.push(newFish._id);
           trip.save();
         }
-      }
+      }}
       next();
     })
     .catch(error => {
       console.log(`Error occurred in trips#update: ${error}`);
       next(error);
     })
+  },
+  delete: (req, res, next) => {
+    authenticateUser(req, res);
+    Trip.findById(req.params.id)
+      .then(trip => {
+        if (trip.user._id.toString() !== req.user._id.toString()) {
+          res.status(401);
+          res.render("401");
+        } else {
+          trip.remove();
+          res.locals.redirect = "/trips";
+          next();
+        }
+      })
   }
 }
