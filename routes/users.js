@@ -4,7 +4,7 @@ const usersController = require("../controllers/usersController");
 
 /* GET users listing. */
 router.get("/new", usersController.new);
-router.post("/create", usersController.create, usersController.redirectView);
+router.post("/create", usersController.validate, usersController.create, usersController.redirectView);
 router.get("/login", usersController.login);
 router.post("/login", usersController.authenticate);
 router.get("/logout", usersController.logout, usersController.redirectView);

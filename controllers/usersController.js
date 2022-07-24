@@ -11,11 +11,15 @@ const getUserParams = body => {
 
 module.exports = {
   new: (req, res) => {
+    res.locals.messages = null;
     res.render("users/new");
   },
   create: (req, res, next) => {
+    if (req.skip) {
+      console.log(res.locals.messages);
+      return next()
+    }; //　前段階でバリデーションに引っかかった場合スキップ
     let newUser = new User(getUserParams(req.body));
-
     User.register(newUser, req.body.password, (error, user) => {
       if (user) {
         console.log("new user created!");
@@ -98,7 +102,6 @@ module.exports = {
       })
   },
   followers: (req, res, next) => {
- 
     User.findById(req.params.id)
       .then(user => {
         res.locals.user = user;
@@ -112,5 +115,52 @@ module.exports = {
   },
   followersView: (req, res) => {
     res.render("users/followers");
+  },
+  validate: (req, res, next) => {
+    req.sanitizeBody("email").normalizeEmail({
+      all_lowercase: true
+    }).trim();
+    req.check("email", "不正なメールアドレスです")
+    .isEmail()
+    .custom((value) => {
+       return new Promise((resolve, reject) => {
+          User.findOne({ "email": value }, (error, user) => {
+             if (user !== null) {
+                return reject();
+             } else {
+                return resolve();
+             }
+          });
+       });
+    }).withMessage('このメールアドレスは登録済みです');
+    req.check("name").notEmpty()
+    .custom(value => {
+      return new Promise((resolve, reject) => {
+        User.findOne({"name": value}, (error, user) => {
+          if (user !== null) {
+            return reject();
+          } else {
+            return resolve();
+          }
+        });
+      });
+    }).withMessage("このユーザー名は登録済みです");
+    req.check("password", "パスワードは8字以上入力してください").notEmpty().isLength({
+      max: 256,
+      min: 8
+    });
+
+    req.getValidationResult().then(error => {
+      if (!error.isEmpty()) {
+        let messages = error.array().map(e => e.msg);
+        console.log(messages);
+        req.skip = true;
+        res.locals.redirect = "/users/new";
+        res.locals.messages = messages;
+        res.render("users/new");
+      } else {
+        next();
+      }
+    });
   }
 }

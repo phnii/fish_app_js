@@ -2,6 +2,15 @@
 
 <div class="container bg-white mt-5">
   <div class="d-grid col-6 mx-auto pt-5 pb-5">
+    <% if (messages) { %>
+    <div class="error-container">
+      <ul>
+        <% messages.forEach(message => { %>
+          <li class="text-danger"><%= message %></li>
+        <% }) %>
+      </ul>
+    </div>
+    <% } %>
     <form action="/users/create" method="POST">
       <div class="field">
         <label for="name">ユーザー名</label>

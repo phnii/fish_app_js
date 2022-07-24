@@ -9,6 +9,7 @@ const expressSession = require("express-session");
 const layouts = require("express-ejs-layouts");
 const passport = require("passport");
 const methodOverride = require("method-override");
+const expressValidator = require("express-validator");
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -39,6 +40,7 @@ app.use(fileUpload());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(expressValidator());
 app.use(cookieParser("testpass"));
 app.use(
   expressSession({
@@ -58,6 +60,8 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+
 
 app.use((req, res, next) => {
   res.locals.loggedIn = req.isAuthenticated();

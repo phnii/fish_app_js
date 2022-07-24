@@ -63,6 +63,7 @@ module.exports = {
     res.render("trips/new");
   },
   create: (req, res, next) => {
+    if (req.skip) return next();
     authenticateUser(req, res);
     let newTripParams = {
       title: req.body.title,
@@ -141,6 +142,7 @@ module.exports = {
       })
   },
   update: (req, res, next) => {
+    if (req.skip) return next();
     authenticateUser(req, res);
     Trip.findById(req.params.id)
     .then(trip => {
@@ -203,5 +205,32 @@ module.exports = {
           next();
         }
       })
+  },
+  validate: (req, res, next) => {
+    req.check("title", "タイトルを入力してください").notEmpty();
+    req.check("prefecture", "都道府県が不正です").notEmpty().isInt();
+    req.check("content", "内容は3000字以内で入力してください").isLength({
+      max: 3000
+    });
+    req.check("fishName").custom(fishName => {
+      fishName = (typeof(fishName) === "string") ? [fishName] : fishName;
+      for (let i = 0; i < fishName.length; i++) {
+        if (!fishName[i].match(/^[ァ-ヶー　]*$/)) {
+          return Promise.reject("魚名は全角カタカナで入力してください");
+        }
+      };
+    });
+
+    req.getValidationResult().then(error => {
+      if (!error.isEmpty()) {
+        let messages = error.array().map(e => e.msg);
+        req.skip = true;
+        console.log(messages);
+        res.locals.redirect = "/trips/new";
+        next();
+      } else {
+        next();
+      }
+    }); 
   }
 }
