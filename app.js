@@ -8,6 +8,7 @@ const mongoose = require("mongoose");
 const expressSession = require("express-session");
 const layouts = require("express-ejs-layouts");
 const passport = require("passport");
+const methodOverride = require("method-override");
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -64,7 +65,7 @@ app.use((req, res, next) => {
   next();
 });
 
-
+app.use(methodOverride("_method"));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use("/trips", tripsRouter);

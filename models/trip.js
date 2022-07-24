@@ -18,6 +18,7 @@ const tripSchema = new Schema({
   },
   fishes: [{type:Schema.Types.ObjectId, ref: "Fish"}],
   user: {type: Schema.Types.ObjectId, ref: "User", required: true},
+  comments: [{type: Schema.Types.ObjectId, ref: "Comment"}]
 }, {timestamps: true});
 
 module.exports = mongoose.model("Trip", tripSchema);

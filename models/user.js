@@ -24,10 +24,16 @@ const userSchema = new Schema({
     type: String
   },
   followers: [{
-    type: Schema.Types.ObjectId, ref: "user"
+    type: Schema.Types.ObjectId, ref: "User"
   }],
   followings: [{
-    type: Schema.Types.ObjectId, ref: "user"
+    type: Schema.Types.ObjectId, ref: "User"
+  }],
+  trips: [{
+    type: Schema.Types.ObjectId, ref: "Trip"
+  }],
+  comments: [{
+    type: Schema.Types.ObjectId, ref: "Comment"
   }]
 });
 

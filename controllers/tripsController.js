@@ -54,7 +54,8 @@ module.exports = {
       prefecture: req.body.prefecture,
       content: req.body.content,
       user: req.user,
-      fishes: []
+      fishes: [],
+      comments: []
     };
     let newTrip = new Trip(newTripParams);
     // 釣果の投稿があった場合はfishデータの保存も行う
@@ -92,6 +93,7 @@ module.exports = {
     Trip.findById(req.params.id)
       .populate({path: "user"})
       .populate({path: "fishes"})
+      .populate({path: "comments", populate: {path: "user"}})
       .then(trip => {
         res.locals.trip = trip;
         next();
