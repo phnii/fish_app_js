@@ -7,7 +7,10 @@ const roomSchema = new Schema({
   },
   user2: {
     type: Schema.Types.ObjectId, ref: "User"
-  }
+  },
+  messages: [{
+    type: Schema.Types.ObjectId, ref: "Message"
+  }]
 })
 
 module.exports = mongoose.model("Room", roomSchema);

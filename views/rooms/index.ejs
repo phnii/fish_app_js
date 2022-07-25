@@ -1,1 +1,32 @@
-<h1>rooms#index</h1>
+<div class="container bg-white mt-5">
+  <div class="d-grid col-8 mx-auto pt-5 pb-5">
+    <h3>
+      <a class="text-body" href="/users/<%=room.user1._id%>"><%= room.user1.name %>さん</a>
+      <a class="text-body" href="/users/<%=room.user2._id%>"><%= room.user2.name %>さん</a>
+    のメッセージルーム
+    </h3>
+    <% if (mutural) { %>
+      <form action="/rooms/<%= room._id %>/sendMessage %>" method="POST">
+        <label for="content">本文</label>
+        <textarea name="content" cols="30" rows="10" class="form-control mb-3"></textarea>
+        <input type="submit" class="btn btn-block btn-primary">
+      </form>
+
+    <% } else { %>
+      <p class="text-success">※ メッセージの送信は相互フォロー状態でのみ可能です</p>
+    <% } %>
+    <div class="messages-container mt-5">
+      <% room.messages.forEach(message => { %>
+        <div class="message border m-2 p-2 mb-3">
+          <div class="d-flex message-heade justify-content-between">
+            <div class="content"><%= message.user.name %></div>
+            <div class="text"><%= dateFormat.ymdhm(message.createdAt) %></div>
+          </div>
+          <div class="message-content">
+            <%= message.content %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</div>
