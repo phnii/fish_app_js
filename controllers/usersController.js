@@ -41,7 +41,7 @@ module.exports = {
   },
   authenticate: passport.authenticate("local", {
     failureRedirect: "/users/login",
-    successRedirect: "/users/new",
+    successRedirect: "/trips",
   }),
   logout: (req, res, next) => {
     req.logout();

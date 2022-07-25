@@ -2,7 +2,7 @@
   <div class="trip-container col-12 mx-auto gap-2 d-grid py-3 my-5">
     <h2 class="text-center mt-3"><%= trip.title %></h2>
     <div class="username text-right">投稿日：<%= dateFormat.ymd(trip.createdAt) %></div>
-    <div class="username text-right">投稿者：<a href="#" class="ml-auto text-body"><%= trip.user.name %></a></div>
+    <div class="username text-right">投稿者：<a href="/users/<%= trip.user._id %>" class="ml-auto text-body"><%= trip.user.name %></a></div>
     <div class="content-container d-flex mr-5">
       <div class="content-name m-2 col-1">
         内容
@@ -40,7 +40,7 @@
     </div>
     <% if (loggedIn && currentUser._id.toString() === trip.user._id.toString()) { %>
       <div class="text-right">
-        <a href="#" class="btn btn-success btn-sm">編集</a>
+        <a href="/trips/edit/<%=trip._id%>" class="btn btn-success btn-sm">編集</a>
         <!-- メソッド注意 -->
         <form action="/trips/<%=trip._id%>/delete?_method=DELETE" method="post">
           <input type="submit" value="削除" class="btn btn-sm btn-danger">
