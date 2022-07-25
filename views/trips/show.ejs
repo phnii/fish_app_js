@@ -1,7 +1,7 @@
 <div class="container bg-white">
   <div class="trip-container col-12 mx-auto gap-2 d-grid py-3 my-5">
     <h2 class="text-center mt-3"><%= trip.title %></h2>
-    <div class="username text-right">投稿日：<%= trip.createdAt %></div>
+    <div class="username text-right">投稿日：<%= dateFormat.ymd(trip.createdAt) %></div>
     <div class="username text-right">投稿者：<a href="#" class="ml-auto text-body"><%= trip.user.name %></a></div>
     <div class="content-container d-flex mr-5">
       <div class="content-name m-2 col-1">
@@ -58,7 +58,7 @@
           <div class="comment border-top">
             <div class="comment-header d-flex">
               <p><a href="#" class="ml-auto text-body"><%= comment.user.name %></a></p>
-              <p class="ml-auto"><%= comment.createdAt %></p>
+              <p class="ml-auto"><%= dateFormat.ymdhm(comment.createdAt) %></p>
             </div>
             <div class="comment-body">
               <%= comment.content %>
