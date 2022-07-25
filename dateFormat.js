@@ -1,9 +1,19 @@
+const getParams = (date) => {return {
+  Y: date.getFullYear().toString(),
+  M: date.getMonth().toString().padStart(2, "0"),
+  D: date.getDate().toString().padStart(2, "0"),
+  h: date.getHours().toString().padStart(2, "0"),
+  m: date.getMinutes().toString().padStart(2, "0")
+}};
+
 module.exports  = {
   ymd: (date) => {
-    return date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate()
+    let params = getParams(date);
+    return params.Y + '/' + params.M + '/' + params.D;
   },
   ymdhm: (date) => {
-    return date.getFullYear() + '/' + date.getMonth() + '/' + date.getDate()
-      + ' ' + date.getHours() + ':' + date.getMinutes();
+    let params = getParams(date);
+    return params.Y + '/' + params.M + '/' + params.D
+      + ' ' + params.h + ':' + params.m;
   }
 }
