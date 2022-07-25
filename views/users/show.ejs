@@ -4,7 +4,7 @@
     <div class="user-info col-4 mt-5 mr-3">
     <p>ユーザー名：<%= user.name %></p>
     <p>投稿数：</p>
-    <p><a href="#" class="text-primary">フォローリスト</a></p>
+    <p><a href="/users/<%=user._id%>/followers" class="text-primary">フォローリスト</a></p>
     <p>自己紹介</p>
     <div class="intro-content mb-3 border-top border-bottom py-2">
       <%= user.introduce %>

@@ -9,6 +9,12 @@ const getUserParams = body => {
   };
 };
 
+const authenticateUser = (req, res) => {
+  if (!req.user) {
+    res.redirect("/users/login");
+  }
+}
+
 module.exports = {
   new: (req, res) => {
     res.locals.messages = null;
@@ -64,6 +70,7 @@ module.exports = {
     res.render("users/show");
   },
   follow: (req, res, next) => {
+    authenticateUser(req, res);
     let follower = req.user;
     User.findById(req.params.id)
       .then(followed => {
@@ -80,6 +87,7 @@ module.exports = {
       });
   },
   unfollow: (req, res, next) => {
+    authenticateUser(req, res);
     res.locals.redirect = `/users/${req.params.id}`;
     User.findById(req.params.id)
       .then(followed => {
@@ -103,6 +111,8 @@ module.exports = {
   },
   followers: (req, res, next) => {
     User.findById(req.params.id)
+      .populate({path: "followers", populate: {path: "trips"}})
+      .populate({path: "followings", populate: {path: "trips"}})
       .then(user => {
         res.locals.user = user;
         next();

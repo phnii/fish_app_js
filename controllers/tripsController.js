@@ -97,6 +97,8 @@ module.exports = {
       }
     }
     newTrip.save().then(trip => {
+      req.user.trips.push(trip._id);
+      req.user.save();
       console.log("new trip here");
       console.log(trip);
       res.locals.redirect = "/trips";

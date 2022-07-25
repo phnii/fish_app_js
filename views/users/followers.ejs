@@ -33,39 +33,42 @@
       </div> -->
   </div>
 
-  <!-- <div class="d-flex">
+  <div class="d-flex">
     <div class='col-6'>
-      <h5>以下のユーザーをフォローしています(<#%= user.followings.count %>)</h5> 
-      <#% user.followings.each do |following_target| %>
+      <h5>以下のユーザーをフォローしています(<%= user.followings.length %>)</h5> 
+      <% user.followings.forEach(following_target => { %>
         <div class="follower border p-2 m-1">
           <div>
-          <#%= link_to following_target.name, follow_list_user_path(following_target), class: 'text-body' %>
-          (投稿数 :  <#%= following_target.trips.count %>)
-          <#%= link_to '投稿履歴', user_path(following_target), class: 'text-secondary' %>
-          <#%= link_to 'フォローリスト ', follow_list_user_path(following_target), class: 'text-secondary' %>
+            <a href="/users/<%=following_target._id%>/followers"><%= following_target.name %></a>
+          (投稿数 :  <%= following_target.trips.length %>)
+          <a href="/users/<%=following_target._id%>" class="text-secondary">投稿履歴</a>
+          <a href="/users/<%=following_target._id%>/followers" class="text-secondary">フォローリスト</a>
           </div>
           <div>
-            <#%= simple_format(following_target.introduce) %>
+            <%= following_target.introduce %>
           </div>
         </div>
-      <#% end %>
+      <% }) %>
     </div>
     <div class="col-6">
-    <h5>以下のユーザーによってフォローされています(<#%= @user.followers.count %>)</h5>
-    <#% @user.followers.each do |follower| %>
+    <h5>以下のユーザーによってフォローされています(<%= user.followers.length %>)</h5>
+    <% user.followers.forEach(follower => { %>
       <div class="followed border p-2 m-1">
         <div>
-          <#%= link_to follower.name, follow_list_user_path(follower), class: 'text-body' %>
-          (投稿数 :  <#%= follower.trips.count %>)
-          <#%= link_to '投稿履歴', user_path(follower), class: 'text-secondary' %>
-          <#%= link_to 'フォローリスト ', follow_list_user_path(follower), class: 'text-secondary' %>
+          <a href="/users/<%=follower._id%>/followers"><%= follower.name %></a>
+          <!-- <#%= link_to follower.name, follow_list_user_path(follower), class: 'text-body' %> -->
+          (投稿数 :  <%= follower.trips.length %>)
+          <a href="/users/<%=follower._id%>" class="text-secondary">投稿履歴</a>
+          <!-- <#%= link_to '投稿履歴', user_path(follower), class: 'text-secondary' %> -->
+          <a href="/users/<%=follower._id%>/followers" class="text-secondary">フォローリスト</a>
+          <!-- <#%= link_to 'フォローリスト ', follow_list_user_path(follower), class: 'text-secondary' %> -->
         </div>
         <div>
-          <#%= simple_format(follower.introduce) %> 
+          <%= follower.introduce %> 
         </div>
       </div>
-    <#% end %>
+    <% }) %>
     </div>
-  </div>  -->
+  </div> 
 </div>
 </div>
