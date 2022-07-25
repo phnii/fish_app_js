@@ -1,0 +1,37 @@
+<script src="https://code.highcharts.com/highcharts.js"></script>
+
+<div class="container bg-white mb-3">
+  <h3 class="my-5 text-center py-3">検索フォーム</h3>
+  <div class="form-wrapper form-group d-flex border-bottom pb-3">
+    <form action="/trips/search" method="POST" class="d-flex border-bottom pb-3">
+      <label for="fishName">魚名</label>
+      <input type="text" name="fishName" class="form-control">
+      <input type="submit" value="検索" class="btn btn-primary">
+    </form>
+  </div>
+    <!-- < if @chart %>
+      < high_chart('my_chart', @chart) %>
+    < end %> -->
+
+  <div class="row row-col-3 mt-5">
+  <!-- <if (@results != nil) %>
+  < @monthly_counts %> -->
+    <% if (trips) { %>
+    <% trips.forEach(trip => { %>
+    <div class="trip-container col-4 border p-3">
+      <div class="trip-title my-2">
+        <a href="/trips/<%=trip._id%>" class="text-body h5"><%= trip.title %></a>
+      </div>
+      <div class=" mb-2">
+        <div class="username">投稿日：<%= trip.createdAt %>(<%= trip.prefecture %>)</div>
+        <div class="username">投稿者：<a href="#" class="text-body"><%= trip.user.name %></a></div>
+      </div>
+      <div class="fish-image">
+        <!-- < image_tag result.image, width: '30%', height: '30%', class: 'd-block, mx-auto' if result.image.attached? %> -->
+      </div>
+    </div>
+    <% }); %>
+    <% }%>
+    <!-- < end %> -->
+  </div>
+</div>

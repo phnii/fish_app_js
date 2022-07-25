@@ -4,6 +4,8 @@ const tripsController = require("../controllers/tripsController");
 const commentsController = require("../controllers/commentsController");
 
 router.get("/", tripsController.index, tripsController.indexView);
+router.get("/search", tripsController.search, tripsController.searchView);
+router.post("/search", tripsController.search, tripsController.searchView);
 router.get("/new", tripsController.new);
 router.post("/create",tripsController.validate, tripsController.create, tripsController.redirectView);
 router.get("/edit/:id",tripsController.edit);

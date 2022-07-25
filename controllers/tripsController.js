@@ -3,6 +3,8 @@ const fs = require("fs");
 const Trip = require("../models/trip");
 const Fish = require("../models/fish");
 
+const dateFormat = require("../dateFormat");
+
 const getTripParams = (body) => {
   return {
     title: body.title,
@@ -47,11 +49,11 @@ module.exports = {
       .then(trips => {
         res.locals.trips = trips;
         res.locals.num = trips.length;
+        res.locals.dateFormat = dateFormat;
         next()
       })
       .catch(error => {
         console.log(`Error occurred in trips#index`);
-
         next(error);
       })
   },
@@ -94,11 +96,12 @@ module.exports = {
         newTrip.fishes.push(newFish._id);
       }
     }
-    newTrip.save();
-    console.log("new Trip created!!");
-    console.log(newTrip);
-    res.locals.redirect = "/trips";
-    next();
+    newTrip.save().then(trip => {
+      console.log("new trip here");
+      console.log(trip);
+      res.locals.redirect = "/trips";
+      next();
+    });
   },
   redirectView: (req, res, next) => {
     let redirectPath = res.locals.redirect;
@@ -106,6 +109,7 @@ module.exports = {
     else next();
   },
   show: (req, res, next) => {
+    res.locals.dateFormat = dateFormat;
     Trip.findById(req.params.id)
       .populate({path: "user"})
       .populate({path: "fishes"})
@@ -155,8 +159,8 @@ module.exports = {
         // 釣果の削除があれば削除をする
         // deleteCheckBoxのチェックボックスが一つしかチェックされなかった時でも配列になるように変換する
         let deleteCheckBoxArray = (typeof(req.body.deleteCheckBox) === "string") ? [req.body.deleteCheckBox] : req.body.deleteCheckBox;
-        deleteCheckBoxArray.forEach(deletedFish => {
-          Fish.findByIdAndRemove(deletedFish)
+        deleteCheckBoxArray.forEach(async(deletedFish) => {
+          await Fish.findByIdAndRemove(deletedFish)
           let updatedFishes = trip.fishes.filter(fish => {
             return deletedFish.toString() !== fish._id.toString();
           })
@@ -206,20 +210,49 @@ module.exports = {
         }
       })
   },
+  search: (req, res, next) => {
+    if (!req.body.fishName) {
+      res.locals.trips = new Set();
+      return next();
+    }
+    // 検索された魚名のFishを持つTripを重複しないように取得
+    Fish.find({"name": req.body.fishName})
+      .populate({path: "trip", populate: {path: "user"}} )
+      .then(fishes => {
+        let trips = new Set();
+        fishes.forEach(fish => {
+          trips.add(fish.trip);
+        })
+        res.locals.trips = trips;
+        next();
+      })
+      .catch(error => {
+        console.log(`Error occurred in trips#search: ${error}`);
+        next(error);
+      })
+  },
+  searchView: (req, res) => {
+    res.render("trips/search");
+  },
   validate: (req, res, next) => {
     req.check("title", "タイトルを入力してください").notEmpty();
     req.check("prefecture", "都道府県が不正です").notEmpty().isInt();
     req.check("content", "内容は3000字以内で入力してください").isLength({
+      min: 0,
       max: 3000
     });
     req.check("fishName").custom(fishName => {
       fishName = (typeof(fishName) === "string") ? [fishName] : fishName;
       for (let i = 0; i < fishName.length; i++) {
-        if (!fishName[i].match(/^[ァ-ヶー　]*$/)) {
-          return Promise.reject("魚名は全角カタカナで入力してください");
-        }
+        return new Promise((resolve, reject) => {
+          if (fishName[i].match(/^[ァ-ヶー　]*$/)) {
+            return resolve();
+          } else {
+            return reject();
+          }
+        })
       };
-    });
+    }).withMessage("魚名は全角カタカナで入力してください");
 
     req.getValidationResult().then(error => {
       if (!error.isEmpty()) {
