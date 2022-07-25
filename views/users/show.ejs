@@ -3,7 +3,7 @@
   <div class="wrapper d-flex">
     <div class="user-info col-4 mt-5 mr-3">
     <p>ユーザー名：<%= user.name %></p>
-    <p>投稿数：</p>
+    <p>投稿数：<%= user.trips.length %></p>
     <p><a href="/users/<%=user._id%>/followers" class="text-primary">フォローリスト</a></p>
     <p>自己紹介</p>
     <div class="intro-content mb-3 border-top border-bottom py-2">
@@ -13,29 +13,30 @@
       <a href="#" class="btn btn-success btn-sm">編集</a>
     <% } %>
   </div>
-  
   <div class="index col-8">
     <div class="row row-col-2 mt-5">
-      <% if (false) { %>
+      <% if (user.trips) { %>
         <div class="trip-container col-6 border p-3">
-          <div class="trip-title"><#%= link_to trip.title, trip_path(trip.id), class: 'text-body h5' %></div>
-          <div class="d-flex">
-            <div class="username">投稿日<#%= trip.created_at.strftime('%Y/%m/%d') %>(<%= trip.prefecture.name %>)</div>
-            <div class="username ml-auto">投稿者：<#%= @user.name %></div>
-          </div>
-          <div class="fish-result my-2">釣果：
-            <#% trip.results.each do |result| %>
-              <%#= result.fish_name %>
-            <#% end %>
-          </div>
-          <div class="content-container my-2">
-            <#%= trip.content.truncate(5) %>
-          </div>
-          <div class="image-container">
-          <#% if trip.results.first && trip.results.first.image.attached? %>
-            <#%= link_to (image_tag trip.results.first.image, width: '80%', height: 'auto'), trip.results.first.image %>
-          <#% end %>
-          </div>
+          <% user.trips.forEach(trip => { %>
+            <div class="trip-title"><a href="/trips/<%=trip._id%>" class="text-body h5"><%= trip.title %></a></div>
+            <div class="d-flex">
+              <div class="username">投稿日<%= dateFormat.ymd(trip.createdAt) %> (<%= trip.prefecture %>)</div>
+              <!-- <div class="username ml-auto">投稿者：<%= user.name %></div> -->
+            </div>
+            <div class="fish-result my-2">釣果：
+              <% trip.fishes.forEach(fish => { %>
+                <%= fish.name %>
+              <% }) %>
+            </div>
+            <div class="content-container my-2">
+              <%= trip.content %> <!-- .truncate(5) -->
+            </div>
+            <div class="image-container">
+            <% if (trip.fishes[0] && trip.fishes[0].image) { %>
+              <img src="/uploads/<%=trip.fishes[0].image %>" width="80%" height="auto">
+            <% } %>
+            </div>
+          <% }) %>
         </div>
       <% } %>
     </div>

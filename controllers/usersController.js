@@ -1,6 +1,8 @@
 const User = require("../models/user");
 const passport = require("passport");
 
+const dateFormat = require("../dateFormat");
+
 const getUserParams = body => {
   return {
     name: body.name,
@@ -56,8 +58,10 @@ module.exports = {
   },
   show: (req, res, next) => {
     User.findById(req.params.id)
+      .populate({path: "trips", populate: {path: "fishes"}})
       .then(user => {
         res.locals.user = user;
+        res.locals.dateFormat = dateFormat;
         next();
       })
       .catch(error => {
