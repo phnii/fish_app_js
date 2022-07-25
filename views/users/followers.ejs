@@ -15,22 +15,18 @@
         <% } %>
       <% } %>
 
-      <!-- <div class="message-button mt-3">
-        <#% if (loggedIn && currentUser._id.toString !== user._id.toString) { %>
-          <#% if (mutural || room_exist) { %>
-          <#% if (current_user.following?(@user) and @user.following?(current_user) or @room_exist) %>
-            <#% <form action="{% url 'room_create' pk %}" method="post">
+      <div class="message-button mt-3">
+        <% if (loggedIn && (currentUser._id.toString() !== user._id.toString())) { %>
+          <% if (mutural || roomExists) { %>
+            <form action="/rooms/create" method="POST">
+              <input type="hidden" name="user1" value="<%= currentUser._id %>">
+              <input type="hidden" name="user2" value="<%= user._id %>">
               <input class='btn btn-sm btn-info' type="submit" value="メッセージ">
             </form> %>
-            <#%= form_with url: rooms_path, model: @room, local: true, method: :post do |f| %>
-              <#%= f.hidden_field :user_ids, name: "room[user_ids][]", value: @user.id %>
-              <#%= f.hidden_field :user_ids, name: "room[user_ids][]", value: current_user.id %>
-              <#%= f.submit 'メッセージ', class: 'btn btn-sm btn-info', id: 'message_btn' %>
-            <#% end %>
-          <#% end %>
-        <#% {% endif %}
-        <#% end %>
-      </div> -->
+          <% } %>
+        <% } %>
+
+      </div>
   </div>
 
   <div class="d-flex">

@@ -118,12 +118,15 @@ module.exports = {
       .populate({path: "followers", populate: {path: "trips"}})
       .populate({path: "followings", populate: {path: "trips"}})
       .then(user => {
+        if (req.user) {
+          res.locals.mutural = req.user.isFollowing(user) && user.isFollowing(req.user);
+          res.locals.roomExists = req.user.hasARoomWith(user);
+        }
         res.locals.user = user;
         next();
       })
       .catch(error => {
         console.log(`Error occurred in users#show : ${error.message}`);
-        res.locals.user = user;
         next(error);
       })
   },

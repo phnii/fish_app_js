@@ -13,6 +13,7 @@ const expressValidator = require("express-validator");
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const roomsRouter = require("./routes/rooms");
 const tripsRouter = require("./routes/trips");
 
 const User = require("./models/user");
@@ -72,6 +73,7 @@ app.use((req, res, next) => {
 app.use(methodOverride("_method"));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use("/rooms", roomsRouter);
 app.use("/trips", tripsRouter);
 
 // catch 404 and forward to error handler

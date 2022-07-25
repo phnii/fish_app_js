@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const usersController = require("../controllers/usersController");
+const roomsController = require('../controllers/roomsController');
 
 /* GET users listing. */
 router.get("/new", usersController.new);

@@ -34,6 +34,9 @@ const userSchema = new Schema({
   }],
   comments: [{
     type: Schema.Types.ObjectId, ref: "Comment"
+  }],
+  rooms: [{
+    type: Schema.Types.ObjectId, ref: "Room"
   }]
 });
 
@@ -43,10 +46,19 @@ userSchema.plugin(passportLocalMongoose, {
 
 userSchema.methods.isFollowing = function(target) {
   for (let i = 0; i < this.followings.length; i++) {
-    if (this.followings[i].toString() === target._id.toString())
+    if (this.followings[i]._id.toString() === target._id.toString())
       return true;
   }
   return false;
 };
+
+userSchema.methods.hasARoomWith = function(anotherUser) {
+  for (let i = 0; i < this.rooms.length; i++) {
+    if (anotherUser.rooms.includes(this.rooms[i]._id)) {
+      return this.rooms[i]._id;
+    }
+  }
+  return false;
+}
 
 module.exports = mongoose.model("User", userSchema);
