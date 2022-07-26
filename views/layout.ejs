@@ -26,9 +26,10 @@
           <a href="/users/new" class="nav-item nav-link text-light">新規登録</a>
           <% } else { %>
           <a href="/trips/new" class="nav-item nav-link text-light">新規投稿</a>
-          <a href="#" class="nav-item nav-link text-light">投稿履歴</a>
-          <a href="#" class="nav-item nav-link text-light">フォローリスト</a>
+          <a href="/users/<%= currentUser._id %>" class="nav-item nav-link text-light">投稿履歴</a>
+          <a href="/users/<%= currentUser._id %>/followers" class="nav-item nav-link text-light">フォローリスト</a>
           <a href="/users/logout" class="nav-item nav-link text-light btn">ログアウト</a>
+          <a class="nav-item nav-link text-light border" href="{% url 'user_trips' user.id %}"><%= currentUser.name %> でログイン中</a>
           <% } %>
         </div>
       </div>

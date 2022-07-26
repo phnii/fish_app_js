@@ -4,7 +4,6 @@ const Trip = require("../models/trip");
 const Fish = require("../models/fish");
 
 const dateFormat = require("../dateFormat");
-const prefectures = require("../prefectures");
 
 const getTripParams = (body) => {
   return {
@@ -48,7 +47,7 @@ module.exports = {
       .populate({path: "user"})
       .populate({path: "fishes"})
       .then(trips => {
-        res.locals.trips = trips;
+        res.locals.trips = trips.slice().reverse();
         res.locals.num = trips.length;
         res.locals.dateFormat = dateFormat;
         next()

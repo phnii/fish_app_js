@@ -16,8 +16,9 @@
   <div class="index col-8">
     <div class="row row-col-2 mt-5">
       <% if (user.trips) { %>
-        <div class="trip-container col-6 border p-3">
+        
           <% user.trips.forEach(trip => { %>
+            <div class="trip-container col-6 border p-3">
             <div class="trip-title"><a href="/trips/<%=trip._id%>" class="text-body h5"><%= trip.title %></a></div>
             <div class="d-flex">
               <div class="username">投稿日<%= dateFormat.ymd(trip.createdAt) %> (<%= prefectures[trip.prefecture] %>)</div>
@@ -35,6 +36,7 @@
             <% if (trip.fishes[0] && trip.fishes[0].image) { %>
               <img src="/uploads/<%=trip.fishes[0].image %>" width="80%" height="auto">
             <% } %>
+            </div>
             </div>
           <% }) %>
         </div>

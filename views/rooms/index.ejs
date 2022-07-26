@@ -16,7 +16,7 @@
       <p class="text-success">※ メッセージの送信は相互フォロー状態でのみ可能です</p>
     <% } %>
     <div class="messages-container mt-5">
-      <% room.messages.forEach(message => { %>
+      <% room.messages.slice().reverse().forEach(message => { %>
         <div class="message border m-2 p-2 mb-3">
           <div class="d-flex message-heade justify-content-between">
             <div class="content"><%= message.user.name %></div>
