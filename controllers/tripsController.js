@@ -62,7 +62,7 @@ module.exports = {
   },
   new: (req, res) => {
     authenticateUser(req, res);
-
+    res.locals.messages = [];
     res.render("trips/new");
   },
   create: (req, res, next) => {
@@ -131,6 +131,7 @@ module.exports = {
   },
   edit: (req, res, next) => {
     authenticateUser(req, res);
+    res.locals.messages = [];
     Trip.findById(req.params.id)
       .populate({path: "user"})
       .populate({path: "fishes"})
@@ -260,9 +261,15 @@ module.exports = {
     req.getValidationResult().then(error => {
       if (!error.isEmpty()) {
         let messages = error.array().map(e => e.msg);
+        res.locals.messages = messages;
         req.skip = true;
         console.log(messages);
-        res.locals.redirect = "/trips/new";
+        console.log(req.path);
+        if (req.path.toString() === "/create") {
+          res.render("trips/new");
+        } else {
+          res.redirect("")
+        }
         next();
       } else {
         next();

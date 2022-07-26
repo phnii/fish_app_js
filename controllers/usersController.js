@@ -31,7 +31,7 @@ module.exports = {
     User.register(newUser, req.body.password, (error, user) => {
       if (user) {
         console.log("new user created!");
-        res.locals.redirect = `/users/new`; // 仮のリダイレクト先
+        res.locals.redirect = `/users/${user._id}`;
         next();
       } else {
         res.locals.redirect = "/users/new";

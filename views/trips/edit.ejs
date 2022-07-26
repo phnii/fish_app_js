@@ -1,6 +1,15 @@
 <div class="container bg-white mb-3 pb-3">
   <h3 class="text-center py-3 my-5">編集</h1>
   <div class="form-wrapper d-grid col-6 mx-auto gap-2 ">
+    <% if (messages) { %>
+      <div class="error-container">
+        <ul>
+          <% messages.forEach(message => { %>
+            <li class="text-danger"><%= message %></li>
+          <% }) %>
+        </ul>
+      </div>
+      <% } %>
     <form id="form-container" action="/trips/update/<%=trip._id%>" method="post" enctype="multipart/form-data">
       <!-- render partial: 'error_messages', locals: { model: @trip} -->
       <div class="tripform">
