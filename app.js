@@ -15,6 +15,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const roomsRouter = require("./routes/rooms");
 const tripsRouter = require("./routes/trips");
+const prefectures = require("./prefectures");
 
 const User = require("./models/user");
 
@@ -62,7 +63,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use(passport.initialize());
 app.use(passport.session());
 
-
+app.use(prefectures);
 
 app.use((req, res, next) => {
   res.locals.loggedIn = req.isAuthenticated();

@@ -4,6 +4,7 @@ const Trip = require("../models/trip");
 const Fish = require("../models/fish");
 
 const dateFormat = require("../dateFormat");
+const prefectures = require("../prefectures");
 
 const getTripParams = (body) => {
   return {
@@ -62,6 +63,7 @@ module.exports = {
   },
   new: (req, res) => {
     authenticateUser(req, res);
+
     res.render("trips/new");
   },
   create: (req, res, next) => {

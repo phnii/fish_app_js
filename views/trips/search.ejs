@@ -23,7 +23,7 @@
         <a href="/trips/<%=trip._id%>" class="text-body h5"><%= trip.title %></a>
       </div>
       <div class=" mb-2">
-        <div class="username">投稿日：<%= trip.createdAt %>(<%= trip.prefecture %>)</div>
+        <div class="username">投稿日：<%= trip.createdAt %>(<%= prefectures[trip.prefecture] %>)</div>
         <div class="username">投稿者：<a href="#" class="text-body"><%= trip.user.name %></a></div>
       </div>
       <div class="fish-image">

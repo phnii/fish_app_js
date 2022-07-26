@@ -4,7 +4,7 @@
       <div class="trip-container col-6 border p-3">
         <div class="trip-title"><a href="/trips/<%=trip._id%>" class="text-body h5"><%= trip.title %></a></div>
         <div class="d-flex mt-2">
-          <div class="username">投稿日<%= dateFormat.ymd(trip.createdAt) %> (<%= trip.prefecture %>)</div>
+          <div class="username">投稿日<%= dateFormat.ymd(trip.createdAt) %> (<%= prefectures[trip.prefecture] %>)</div>
           <div class="username ml-auto">投稿者：<a href="/users/<%= trip.user._id %>" class="ml-auto text-body"><%= trip.user.name %></a></div>
         </div>
         <div class="fish-result my-2">釣果：
@@ -27,3 +27,4 @@
     <% }) %>
   
   </div>
+</div>

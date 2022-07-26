@@ -7,7 +7,11 @@
         <label for="title">タイトル</label>
         <input type="text" name="title" class="form-control" value="<%=trip.title%>">
         <label for="prefecture">都道府県</label>
-        <input type="text" name="prefecture" class="form-control" value="<%=trip.prefecture%>">
+        <select class="custom-select" name="prefecture">
+          <% for (let i = 0; i < prefectures.length; i++) { %>
+            <option <% if (i === trip.prefecture) { %> selected="i" <% } %>  value="<%= i %>" class="form-control"><%= prefectures[i] %></option>
+          <% } %>
+        </select><p></p>
         <label for="content">内容</label>
         <textarea name="content" class="form-control" cols="30" rows="10"><%=trip.content%></textarea>
       </div>
