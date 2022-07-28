@@ -1,6 +1,9 @@
 # fish_app_js
  
-元はpythonで作成したオリジナルアプリのFishAppを題材に使ってNode.jsとExpressの学習しています。  
+元はpythonで作成したオリジナルアプリのFishAppを題材に使ってNode.jsとExpressの学習しています。
+
+オリジナルアプリFishApp  
+https://github.com/phnii/fish_app
 
 #### 実装済み機能  
 - ユーザー登録機能
