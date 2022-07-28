@@ -4,6 +4,7 @@ const Trip = require("../models/trip");
 const Fish = require("../models/fish");
 
 const dateFormat = require("../dateFormat");
+const trip = require("../models/trip");
 
 const getTripParams = (body) => {
   return {
@@ -220,14 +221,20 @@ module.exports = {
       return next();
     }
     // 検索された魚名のFishを持つTripを重複しないように取得
+    let fishesPerMonth = new Array(12);
+    fishesPerMonth.fill(0);
     Fish.find({"name": req.body.fishName})
       .populate({path: "trip", populate: {path: "user"}} )
       .then(fishes => {
         let trips = new Set();
         fishes.forEach(fish => {
           trips.add(fish.trip);
+          fishesPerMonth[fish.trip.createdAt.getMonth()]++;
         })
+        res.locals.fishName = req.body.fishName;
         res.locals.trips = trips;
+        res.locals.fishesPerMonth = fishesPerMonth;
+        res.locals.dateFormat = dateFormat;
         next();
       })
       .catch(error => {
